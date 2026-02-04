@@ -14,7 +14,7 @@ export interface TimeStats {
 }
 
 export interface YearInsight {
-  fact: string;
-  motivation: string;
+  aiTool: string;
+  proverb: string;
   historicalEvent: string;
 }

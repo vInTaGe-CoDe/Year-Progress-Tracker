@@ -4,20 +4,23 @@ import { YearInsight } from "../types";
 
 export const getDailyYearInsight = async (year: number, dateStr: string): Promise<YearInsight> => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Today is ${dateStr}. Provide a short daily insight for someone tracking the progress of the year ${year}. Include a fun fact about the number ${year}, a motivational quote for the current stage of the year, and one significant historical event that happened on ${dateStr} in any year.`,
+      contents: `Today is ${dateStr}. Provide a daily update for a high-precision year tracker:
+      1. AI Tool: Suggest one interesting AI tool for productivity and work optimization (name and 1-sentence description).
+      2. Proverb: Provide an African proverb or wise saying, explicitly stating its origin (country, tribe, or author).
+      3. History: State one major historical event that happened on ${dateStr} in history.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            fact: { type: Type.STRING, description: "A fun fact about the current year as a number or its position in history." },
-            motivation: { type: Type.STRING, description: "A short motivational sentence tailored to the current percentage of the year passed." },
-            historicalEvent: { type: Type.STRING, description: "A significant historical event that occurred on this specific month and day." }
+            aiTool: { type: Type.STRING, description: "Name and brief description of an AI productivity tool." },
+            proverb: { type: Type.STRING, description: "An African proverb including its origin/country/author." },
+            historicalEvent: { type: Type.STRING, description: "A major historical event for this calendar date." }
           },
-          required: ["fact", "motivation", "historicalEvent"]
+          required: ["aiTool", "proverb", "historicalEvent"]
         }
       }
     });
@@ -25,11 +28,11 @@ export const getDailyYearInsight = async (year: number, dateStr: string): Promis
     const text = response.text.trim();
     return JSON.parse(text);
   } catch (error) {
-    console.error("Error fetching Gemini insight");
+    console.error("Error fetching Gemini insight", error);
     return {
-      fact: `${year} is a year of transformation and growth.`,
-      motivation: "Small progress is still progress. Keep going.",
-      historicalEvent: "On this day, countless individuals took steps toward their dreams."
+      aiTool: "Perplexity AI: A powerful answer engine that provides sourced information for research.",
+      proverb: "If you want to go fast, go alone. If you want to go far, go together. (African Proverb)",
+      historicalEvent: "On this day, significant events shaped the world we live in today."
     };
   }
 };

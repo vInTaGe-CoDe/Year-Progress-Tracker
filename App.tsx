@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, History, Timer, Hourglass, ChevronRight, PartyPopper } from 'lucide-react';
+import { Sparkles, History, Timer, Hourglass, ChevronRight, PartyPopper, Cpu, Quote } from 'lucide-react';
 import { calculateProgressStats, getSeason } from './utils/dateUtils';
 import { getDailyYearInsight } from './services/geminiService';
 import { TimeStats, YearInsight } from './types';
 import { StatBox } from './components/StatBox';
 
 const App: React.FC = () => {
-  // Use strictly primitive-based objects for state to ensure serializability
   const [stats, setStats] = useState<TimeStats>(calculateProgressStats());
   const [insight, setInsight] = useState<YearInsight | null>(null);
   const [loadingInsight, setLoadingInsight] = useState(true);
@@ -31,12 +30,7 @@ const App: React.FC = () => {
     fetchInsight();
   }, [stats.currentYear]);
 
-  // Transition to countdown mode when near 100% or after rollover
-  // For the purpose of the app, "Year Complete" is any time stats.percentage is exactly 100 or higher
   const isYearComplete = stats.percentage >= 100;
-  
-  // If we are in the last day, or percentage is very high, we emphasize the countdown
-  const isCountdownMode = stats.daysRemaining === 0 || isYearComplete;
   const progressPercentage = stats.percentage.toFixed(2);
   const season = getSeason(new Date().getMonth());
 
@@ -55,7 +49,6 @@ const App: React.FC = () => {
       </header>
 
       <main className="w-full space-y-6">
-        {/* Main Progress Card / Transitioned Countdown Card */}
         <div className="glass p-8 md:p-14 rounded-[3rem] relative overflow-hidden group border border-white/10 shadow-2xl shadow-sky-900/20">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-sky-500/10 rounded-full blur-[100px] group-hover:bg-sky-500/20 transition-all duration-700"></div>
           
@@ -121,7 +114,6 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Updated Grid: Monthly and Daily Progress Bars as requested */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatBox 
             label="Year Accomplished" 
@@ -153,7 +145,6 @@ const App: React.FC = () => {
           />
         </div>
 
-        {/* AI Insight Section */}
         <section className="w-full glass p-8 rounded-[2.5rem] border border-white/5 relative group overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent rounded-[2.5rem] pointer-events-none"></div>
           <div className="flex items-center gap-3 mb-8 relative">
@@ -173,26 +164,26 @@ const App: React.FC = () => {
             <div className="grid md:grid-cols-3 gap-10 relative">
               <div className="space-y-3 group/item">
                 <div className="text-[10px] font-black text-sky-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <ChevronRight size={10} /> The Year {stats.currentYear}
+                  <Cpu size={12} /> AI Tools Suggestions
                 </div>
-                <p className="text-slate-300 text-sm leading-relaxed border-l-2 border-sky-500/20 pl-4 py-1 group-hover/item:border-sky-500 transition-colors italic">
-                  {insight.fact}
+                <p className="text-slate-300 text-sm leading-relaxed border-l-2 border-sky-500/20 pl-4 py-1 group-hover/item:border-sky-500 transition-colors font-medium">
+                  {insight.aiTool}
                 </p>
               </div>
               <div className="space-y-3 group/item">
                 <div className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                   <ChevronRight size={10} /> Motivation
+                   <Quote size={12} /> African Proverbs and Wise Sayings
                 </div>
-                <p className="text-slate-100 text-sm leading-relaxed font-semibold pl-4 py-1 group-hover/item:text-white transition-colors">
-                  "{insight.motivation}"
+                <p className="text-slate-100 text-sm leading-relaxed font-semibold pl-4 py-1 group-hover/item:text-white transition-colors italic">
+                  "{insight.proverb}"
                 </p>
               </div>
               <div className="space-y-3 group/item">
                 <div className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                   <History size={10} /> Legacy
+                   <History size={12} /> On This Day
                 </div>
                 <div className="flex gap-3 items-start pl-4">
-                   <p className="text-slate-400 text-xs leading-relaxed italic">{insight.historicalEvent}</p>
+                   <p className="text-slate-400 text-xs leading-relaxed font-medium">{insight.historicalEvent}</p>
                 </div>
               </div>
             </div>
