@@ -1,0 +1,5 @@
+{
+  "name": "Year Progress Tracker",
+  "description": "A high-precision visual dashboard tracking the current year's progress with real-time percentages, detailed time stats, and AI-powered daily insights.",
+  "requestFramePermissions": []
+}
